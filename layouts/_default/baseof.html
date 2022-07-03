@@ -1,38 +1,39 @@
+{{ $style := resources.Get "sass/main.scss" | resources.ToCSS | resources.Minify | resources.Fingerprint }}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/assets/css/styles.css" />
-    <title>{{ page.title }} &ndash; {{ site.title }}</title>
+    <link rel="stylesheet" href="{{ $style.Permalink }}" />
+    <title>{{ .Page.Title }} &ndash; {{ .Site.Title }}</title>
   </head>
   <body>
     <header>
-      <div id="site-title">{{ site.title }}</div>
-      <div id="page-title">{{ page.title }}</div>
+      <div id="site-title">{{ .Site.Title }}</div>
+      <div id="page-title">{{ .Page.Title }}</div>
       <nav>
         <ul>
           <li>
             <a
-              {% if page.title == "Homepage" %}
+              {{ if eq .Page.Title "Homepage" }}
                 class="active"
-              {% endif %}
+              {{ end }}
               href="/"
             >🏠 Home</a>
           </li
           ><li>
             <a
-              {% if page.collection == "posts" or page.title == "Blog"%}
+              {{ if eq .Page.Title "blog" }}
                 class="active"
-              {% endif %}
+              {{ end }}
               href="/blog"
             >📰 Blog</a>
           </li
           ><li>
             <a
-              {% if page.title == "Contact" %}
+              {{ if eq .Page.Title "Contact" }}
                 class="active"
-              {% endif %}
+              {{ end }}
               href="/contact"
             >🤙 Contact</a>
           </li>
@@ -40,7 +41,7 @@
       </nav>
     </header>
     <section>
-      <article>{{ content }}</article>
+      <article>{{ block "main" . }}{{ end }}</article>
     </section>
   </body>
 </html>
